@@ -1,0 +1,20 @@
+/* Custom toast style */
+.custom-toast {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  word-wrap: break-word;
+  max-width: 90vw;
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 480px) {
+  .Toastify__toast-container--top-right {
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    left: 0.5rem !important;
+    width: auto !important;
+    max-width: calc(100vw - 1rem);
+  }
+}

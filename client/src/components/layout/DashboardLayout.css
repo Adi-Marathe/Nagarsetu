@@ -1,0 +1,88 @@
+/* ===== DASHBOARD LAYOUT ===== */
+.dashboard-layout { display: flex; min-height: 100vh; background: var(--cream); }
+
+/* Sidebar */
+.dl-sidebar {
+  width: 260px; background: var(--white); border-right: 1px solid var(--gray-200);
+  display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 50;
+  transition: transform 0.3s ease;
+}
+.dl-sidebar-header {
+  padding: 20px 20px 16px; display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--gray-200);
+}
+.dl-brand { font-size: 1.3rem; font-weight: 800; color: var(--dark); }
+.dl-brand span { color: var(--accent); }
+.dl-close-sidebar { display: none; background: none; border: none; color: var(--gray-500); cursor: pointer; }
+.dl-sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; }
+.dl-nav-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius-md);
+  color: var(--gray-600); font-size: 0.9rem; font-weight: 500; transition: var(--transition); text-decoration: none;
+}
+.dl-nav-item:hover { background: rgba(77, 44, 94, 0.05); color: var(--primary); }
+.dl-nav-item.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(77, 44, 94, 0.25); }
+.dl-sidebar-footer { padding: 16px; border-top: 1px solid var(--gray-200); }
+.dl-user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.dl-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;
+}
+.dl-user-name { font-size: 0.85rem; font-weight: 600; color: var(--dark); }
+.dl-user-role { font-size: 0.75rem; color: var(--gray-400); }
+.dl-logout-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border: 1px solid var(--gray-200); border-radius: var(--radius-md);
+  background: none; color: var(--gray-500); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: var(--transition);
+}
+.dl-logout-btn:hover { background: rgba(239, 68, 68, 0.06); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+
+/* Main */
+.dl-main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh; }
+.dl-topbar {
+  background: var(--white); border-bottom: 1px solid var(--gray-200);
+  padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40;
+}
+.dl-topbar-left { display: flex; align-items: center; gap: 12px; }
+.dl-menu-btn { display: none; background: none; border: none; color: var(--gray-600); cursor: pointer; }
+.dl-page-title { font-size: 1.3rem; font-weight: 700; color: var(--dark); }
+.dl-topbar-right { display: flex; align-items: center; gap: 12px; }
+.dl-notif-wrapper { position: relative; }
+.dl-notif-btn { background: none; border: none; cursor: pointer; color: var(--gray-500); position: relative; padding: 8px; border-radius: var(--radius-sm); transition: var(--transition); }
+.dl-notif-btn:hover { background: var(--gray-100); color: var(--primary); }
+.dl-notif-badge {
+  position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: var(--danger);
+  color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.dl-notif-dropdown {
+  position: absolute; top: 100%; right: 0; width: 340px; background: var(--white);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); border: 1px solid var(--gray-200);
+  margin-top: 8px; overflow: hidden; z-index: 100;
+}
+.dl-notif-header {
+  display: flex; justify-content: space-between; align-items: center; padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.dl-notif-header h3 { font-size: 0.95rem; font-weight: 700; color: var(--dark); }
+.dl-notif-header button { background: none; border: none; color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.dl-notif-list { max-height: 360px; overflow-y: auto; }
+.dl-notif-empty { text-align: center; padding: 24px; color: var(--gray-400); font-size: 0.88rem; }
+.dl-notif-item { padding: 12px 16px; border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: var(--transition); }
+.dl-notif-item:hover { background: var(--gray-100); }
+.dl-notif-item.unread { background: rgba(255, 116, 38, 0.04); border-left: 3px solid var(--accent); }
+.dl-notif-title { font-size: 0.85rem; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+.dl-notif-msg { font-size: 0.8rem; color: var(--gray-500); line-height: 1.4; }
+.dl-notif-time { font-size: 0.72rem; color: var(--gray-400); margin-top: 4px; display: block; }
+
+.dl-content { flex: 1; padding: 28px; }
+.dl-overlay { display: none; }
+
+@media (max-width: 900px) {
+  .dl-sidebar { transform: translateX(-100%); }
+  .dl-sidebar.open { transform: translateX(0); }
+  .dl-close-sidebar { display: block; }
+  .dl-main { margin-left: 0; }
+  .dl-menu-btn { display: block; }
+  .dl-overlay { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 45; }
+  .dl-content { padding: 20px 16px; }
+  .dl-notif-dropdown { width: 300px; right: -40px; }
+}

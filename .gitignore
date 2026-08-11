@@ -1,0 +1,53 @@
+# =============================================================
+# NagarSetu — Root .gitignore
+# =============================================================
+
+# ── Environment secrets (NEVER commit) ──────────────────────
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+*.env
+
+# ── Dependencies ─────────────────────────────────────────────
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# ── Build output ─────────────────────────────────────────────
+dist/
+build/
+client/dist/
+client/build/
+
+# ── Logs ─────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── Runtime / OS ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Editor ───────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# ── Vite local overrides ─────────────────────────────────────
+*.local
+dist-ssr/
+
+# ── What IS safe to commit ───────────────────────────────────
+# .env.example   → safe, no real secrets
+# .env.development.example → safe

@@ -1,0 +1,45 @@
+# =============================================================
+# NagarSetu Client — .gitignore
+# =============================================================
+
+# ── Environment secrets (NEVER commit) ──────────────────────
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+*.env
+*.local
+
+# ── Dependencies ─────────────────────────────────────────────
+node_modules/
+
+# ── Build output ─────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+
+# ── Logs ─────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── OS / Editor ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── What IS safe to commit ───────────────────────────────────
+# .env.example   → safe, documents required variables
+# vercel.json    → safe, Vercel deployment config
