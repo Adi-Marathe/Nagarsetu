@@ -1,316 +1,316 @@
-# NagarSetu — Smart Civic Issue Reporting Platform
+# NagarSetu
 
-**NagarSetu** (नगरसेतु — "City Bridge") is a full-stack web application that makes it simple for citizens to report civic issues like potholes, broken street lights, or overflowing drains — and actually get them resolved. It connects citizens directly with municipal administrators and department officers through a transparent, trackable workflow.
+![License](https://img.shields.io/badge/license-MIT-24292f?style=flat-square&labelColor=24292f)
+![Node](https://img.shields.io/badge/node-%3E%3D18-24292f?style=flat-square&labelColor=24292f)
+![Stack](https://img.shields.io/badge/stack-MERN-24292f?style=flat-square&labelColor=24292f)
 
-Built with the MERN stack. Deployed on Vercel + Render.
+NagarSetu (नगरसेतु, "City Bridge") is a full-stack civic issue reporting platform. Citizens report problems such as potholes, broken street lights, or overflowing drains. Administrators verify and route them to the right department. Officers work on them and mark them resolved. Every step is tracked and every change notifies the citizen.
 
----
+Frontend: Vercel. Backend: Render. Database: MongoDB Atlas.
 
-## Why We Built This
+Live demo: _add URL_
 
-We've all been there. You spot a massive pothole on your daily commute, a street light that's been dead for weeks, or garbage piling up in your neighborhood. You want to report it, but you don't know who to call, which department handles it, or whether anyone will actually do something about it.
+## Motivation
 
-NagarSetu solves this. Citizens report issues through a simple form (with photos and map location), admins verify and route them to the right department, and officers update progress until the issue is fixed. Every step is visible, every update is notified, and nothing falls through the cracks.
+Reporting a civic issue is easy. Finding the right department, and knowing whether anyone acted on the report, is not. NagarSetu gives citizens a single place to report, and gives municipal staff a structured workflow to respond, with a full audit trail for each complaint.
 
----
+## Features
 
-## What It Does
+**Citizens**
+- Report issues with title, description, category (19 types), priority, photos, and a pinned map location
+- Track each complaint through its lifecycle
+- Receive notifications on every status change
+- Upvote complaints to surface urgent issues
+- Comment on complaints and rate resolutions (1 to 5)
 
-The platform has three user roles, each with their own dashboard:
-
-### Citizens
-- Report civic issues with a title, description, category, priority, photos, and an exact location pinned on an interactive map
-- Track complaints through every stage — submitted, verified, assigned, in progress, resolved
-- Get notified whenever something changes
-- Upvote other citizens' complaints to help prioritize urgent issues
-- Rate the resolution once it's done (1–5 stars)
-
-### Administrators
-- Review and verify incoming complaints
-- Assign verified complaints to the right department officer
-- View analytics — category breakdowns, status distributions, complaint trends
+**Administrators**
+- Verify incoming complaints
+- Assign verified complaints to department officers
+- View analytics: category breakdown, status distribution, trends
 - Manage officers and departments
 
-### Department Officers
-- See all complaints assigned to them
-- Mark complaints as "in progress" with notes
-- Resolve complaints — citizens get notified automatically
-- Track personal stats (assigned, in progress, resolved, closed)
+**Officers**
+- View assigned complaints
+- Mark complaints in progress, with notes
+- Resolve complaints; the citizen is notified automatically
+- View personal stats: assigned, in progress, resolved, closed
 
----
+## Complaint Lifecycle
 
-## How a Complaint Moves Through the System
-
-```
-Citizen reports issue
-        |
-        v
-Admin reviews & verifies
-        |
-        v
-Admin assigns to department officer
-        |
-        v
-Officer starts work (status: in_progress)
-        |
-        v
-Officer resolves the issue
-        |
-        v
-Citizen gets notified, rates the resolution
-        |
-        v
-Complaint closed
+```mermaid
+flowchart LR
+    A[Reported] --> B[Verified]
+    B --> C[Assigned]
+    C --> D[In progress]
+    D --> E[Resolved]
+    E --> F[Closed]
 ```
 
-**Status flow:** `submitted` → `verified` → `assigned` → `in_progress` → `resolved` → `closed`
-
----
+Status values: `submitted`, `verified`, `assigned`, `in_progress`, `resolved`, `closed`. Each transition is appended to the complaint's `timeline`.
 
 ## Tech Stack
 
-**Frontend:** React 19, Vite 8, React Router 7, Axios, React-Leaflet (maps), Bootstrap, Lucide icons, React-Toastify
+| Layer | Technologies |
+|---|---|
+| Frontend | React 19, Vite 8, React Router 7, Axios, React-Leaflet, Bootstrap, Lucide, React-Toastify |
+| Backend | Node.js, Express 5, Mongoose 9, JWT, bcryptjs |
+| Database | MongoDB Atlas |
+| Hosting | Vercel (client), Render (server) |
 
-**Backend:** Node.js, Express 5, Mongoose 9, JWT authentication, bcryptjs for password hashing
+## Architecture
 
-**Database:** MongoDB Atlas
+```mermaid
+flowchart TB
+    subgraph Client[React SPA]
+        UI[Role-based dashboards]
+        AUTH[AuthContext and PrivateRoute]
+        API[Axios service layer]
+    end
 
-**Deployment:** Vercel (frontend), Render (backend)
+    subgraph Server[Express API]
+        MW[protect / authorize middleware]
+        CTRL[Controllers]
+        MODELS[Mongoose models]
+    end
 
----
+    DB[(MongoDB Atlas)]
+
+    UI --> AUTH --> API
+    API -->|REST + Bearer JWT| MW --> CTRL --> MODELS --> DB
+```
 
 ## Project Structure
 
 ```
 nagarsetu/
-|
-├── client/                        # React frontend
+├── client/
 │   ├── src/
-│   │   ├── components/            # Reusable UI components (by feature area)
-│   │   ├── context/AuthContext.jsx # Global auth state
-│   │   ├── pages/                 # Page components grouped by role
-│   │   │   ├── Admin/             # Dashboard, VerifyIssues, AssignOfficers
-│   │   │   ├── Auth/              # Login, Signup
-│   │   │   ├── Citizen/           # Dashboard, ReportIssue, MyComplaints, Details
-│   │   │   ├── LandingPage/       # Public landing page
-│   │   │   └── Officer/           # Dashboard, OfficerWork
-│   │   ├── routes/PrivateRoute.jsx # Role-based route guards
-│   │   └── services/api.js        # Centralized Axios client
+│   │   ├── components/              Reusable UI components
+│   │   ├── context/AuthContext.jsx  Global auth state
+│   │   ├── pages/
+│   │   │   ├── Admin/               Dashboard, VerifyIssues, AssignOfficers
+│   │   │   ├── Auth/                Login, Signup
+│   │   │   ├── Citizen/             Dashboard, ReportIssue, MyComplaints, Details
+│   │   │   ├── LandingPage/         Public landing page
+│   │   │   └── Officer/             Dashboard, OfficerWork
+│   │   ├── routes/PrivateRoute.jsx  Role-based route guards
+│   │   └── services/api.js          Axios client
 │   └── .env.example
-|
-├── server/                        # Node.js backend
-│   ├── src/
-│   │   ├── config/
-│   │   │   ├── db.js              # MongoDB connection
-│   │   │   └── seedDepartments.js # Seeds 6 departments + admin user on first run
-│   │   ├── controllers/           # Business logic for each route group
-│   │   ├── middleware/auth.js     # JWT verification + role authorization
-│   │   ├── models/                # Mongoose schemas (User, Complaint, Department, Comment, Notification)
-│   │   └── routes/                # Express route definitions
-│   ├── server.js                  # App entry point
-│   └── .env.example
-|
-├── .gitignore
-└── README.md
+└── server/
+    ├── src/
+    │   ├── config/
+    │   │   ├── db.js                MongoDB connection
+    │   │   └── seedDepartments.js   Seeds departments and admin on first run
+    │   ├── controllers/             Business logic
+    │   ├── middleware/auth.js       JWT verification and role checks
+    │   ├── models/                  User, Complaint, Department, Comment, Notification
+    │   └── routes/                  Route definitions
+    ├── server.js                    Entry point
+    └── .env.example
 ```
-
----
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js v18+ and npm
-- A [MongoDB Atlas](https://www.mongodb.com/atlas) account (free tier works fine)
+- Node.js 18 or later
+- A MongoDB Atlas cluster (free tier is enough)
 - Git
 
-### 1. Clone and install
+### Install
 
 ```bash
 git clone https://github.com/Adi-Marathe/Nagarsetu.git
 cd Nagarsetu
-```
 
-Install dependencies for both client and server:
-
-```bash
 cd server && npm install
 cd ../client && npm install
 ```
 
-### 2. Configure environment variables
-
-**Server** — copy `server/.env.example` to `server/.env` and fill in:
-
-```env
-MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/nagarsetu?retryWrites=true&w=majority
-JWT_SECRET=your_secret_here        # generate with: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
-PORT=5000
-NODE_ENV=development
-CLIENT_ORIGIN=http://localhost:5173
-```
-
-**Client** — copy `client/.env.example` to `client/.env`:
-
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-### 3. Run the app
-
-You'll need two terminal windows:
+### Configure
 
 ```bash
-# Terminal 1 — start the backend
-cd server
-npm run dev
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+```
+
+See [Environment Variables](#environment-variables) for the values.
+
+### Run
+
+In two terminals:
+
+```bash
+cd server && npm run dev
 ```
 
 ```bash
-# Terminal 2 — start the frontend
-cd client
-npm run dev
+cd client && npm run dev
 ```
 
-The app will be running at `http://localhost:5173`.
+The app runs at `http://localhost:5173`. On first start, the server seeds six departments and a default admin account.
 
-On the first startup, the server automatically seeds 6 municipal departments and a default admin account.
-
-### 4. Default admin credentials
+### Default admin (development only)
 
 | Email | Password |
 |---|---|
 | `admin@nagarsetu.local` | `Admin@123` |
 
-Change these in production by setting `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables.
+Override with `ADMIN_EMAIL` and `ADMIN_PASSWORD` in production.
 
----
+## Environment Variables
 
-## API Endpoints
+**server/.env**
 
-All routes are prefixed with `/api`. Protected routes require a `Bearer <token>` header.
+| Variable | Description |
+|---|---|
+| `MONGO_URI` | MongoDB connection string |
+| `JWT_SECRET` | Secret for signing tokens |
+| `PORT` | API port (default `5000`) |
+| `NODE_ENV` | `development` or `production` |
+| `CLIENT_ORIGIN` | Allowed frontend origin for CORS |
+| `ADMIN_EMAIL` | Optional. Seeded admin email |
+| `ADMIN_PASSWORD` | Optional. Seeded admin password |
 
-### Auth
+Generate a JWT secret:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+
+**client/.env**
+
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Backend base URL, e.g. `http://localhost:5000/api` |
+
+## API Reference
+
+Base path: `/api`. Protected routes need `Authorization: Bearer <token>`.
+
+<details>
+<summary>Auth</summary>
+
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| POST | `/auth/register` | Public | Register a new user |
-| POST | `/auth/login` | Public | Login, returns JWT |
+| POST | `/auth/register` | Public | Register a user |
+| POST | `/auth/login` | Public | Log in, returns JWT |
 | GET | `/auth/profile` | Authenticated | Get current user |
 | PUT | `/auth/profile` | Authenticated | Update profile |
 
-### Complaints
+</details>
+
+<details>
+<summary>Complaints</summary>
+
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | POST | `/complaints` | Citizen | Create a complaint |
-| GET | `/complaints` | Authenticated | Get complaints (filtered by role) |
-| GET | `/complaints/all` | Admin | Get all complaints |
+| GET | `/complaints` | Authenticated | List complaints (filtered by role) |
+| GET | `/complaints/all` | Admin | List all complaints |
 | GET | `/complaints/:id` | Authenticated | Get complaint details |
 | PUT | `/complaints/:id/status` | Admin, Officer | Update status |
 | PUT | `/complaints/:id/upvote` | Authenticated | Toggle upvote |
 | PUT | `/complaints/:id/feedback` | Citizen | Rate a resolved complaint |
 
-### Admin
+</details>
+
+<details>
+<summary>Admin</summary>
+
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | GET | `/admin/stats` | Admin | Dashboard statistics |
 | PUT | `/admin/verify/:id` | Admin | Verify a complaint |
 | PUT | `/admin/assign/:id` | Admin | Assign to an officer |
-| GET | `/admin/officers` | Admin | List all officers |
-| GET | `/admin/departments` | Admin | List all departments |
+| GET | `/admin/officers` | Admin | List officers |
+| GET | `/admin/departments` | Admin | List departments |
 
-### Officer
+</details>
+
+<details>
+<summary>Officer</summary>
+
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/officer/complaints` | Officer | Get assigned complaints |
+| GET | `/officer/complaints` | Officer | Assigned complaints |
 | GET | `/officer/stats` | Officer | Personal stats |
-| PUT | `/officer/progress/:id` | Officer | Mark as in progress |
+| PUT | `/officer/progress/:id` | Officer | Mark in progress |
 | PUT | `/officer/resolve/:id` | Officer | Resolve complaint |
 
-### Comments and Notifications
+</details>
+
+<details>
+<summary>Comments and Notifications</summary>
+
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
 | POST | `/comments/:complaintId` | Authenticated | Add a comment |
 | GET | `/comments/:complaintId` | Authenticated | Get comments |
 | GET | `/notifications` | Authenticated | Get notifications |
-| PUT | `/notifications/:id/read` | Authenticated | Mark as read |
+| PUT | `/notifications/:id/read` | Authenticated | Mark one as read |
 | PUT | `/notifications/read-all` | Authenticated | Mark all as read |
 
----
+</details>
 
 ## Database Models
 
-**User** — name, email, hashed password, role (`citizen`/`admin`/`officer`), phone, department reference
+| Model | Fields |
+|---|---|
+| User | name, email, hashed password, role (`citizen`, `admin`, `officer`), phone, department ref |
+| Complaint | title, description, category, status, priority, location (address, lat/lng), images, citizen, department, assigned officer, upvotes, timeline, feedback, resolved timestamp |
+| Department | name, code, description, categories, head, contact info |
+| Comment | complaint ref, user ref, text, timestamps |
+| Notification | user ref, title, message, type, read status, optional complaint ref |
 
-**Complaint** — title, description, category (19 types), status (6 stages), priority, location (address + lat/lng), images, citizen ref, department ref, assigned officer, upvotes array, timeline (audit trail of every status change), feedback (rating + comment), resolved timestamp
-
-**Department** — name, code, description, associated categories, department head, contact info. Six departments are seeded automatically: Public Works (PWD), Sanitation (SAN), Water Supply (WSD), Electricity (ELEC), Health (HEALTH), Transport (TRANS)
-
-**Comment** — linked to a complaint and user, text content with timestamps
-
-**Notification** — linked to a user, with title, message, type (status_update, assignment, comment, etc.), read status, and optional complaint reference
-
----
+Seeded departments: Public Works (`PWD`), Sanitation (`SAN`), Water Supply (`WSD`), Electricity (`ELEC`), Health (`HEALTH`), Transport (`TRANS`).
 
 ## Deployment
 
-### Frontend on Vercel
+**Frontend (Vercel)**
+1. Import the repo and set the root directory to `client`.
+2. Add `VITE_API_URL=https://<backend>.onrender.com/api`.
+3. Deploy.
 
-1. Import your GitHub repo on [vercel.com](https://vercel.com)
-2. Set root directory to `client`
-3. Add env variable: `VITE_API_URL=https://your-backend.onrender.com/api`
-4. Deploy
-
-### Backend on Render
-
-1. Create a new Web Service on [render.com](https://render.com)
-2. Set root directory to `server`
-3. Build command: `npm install` | Start command: `npm start`
-4. Add env variables: `MONGO_URI`, `JWT_SECRET`, `CLIENT_ORIGIN`, `NODE_ENV=production`
-5. Deploy
-
----
+**Backend (Render)**
+1. Create a Web Service with root directory `server`.
+2. Build command `npm install`, start command `npm start`.
+3. Set `MONGO_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (your Vercel URL), `NODE_ENV=production`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`.
+4. Deploy.
 
 ## Security
 
-- Passwords are hashed with bcrypt (10 salt rounds) and excluded from query results by default
-- JWT tokens with 30-day expiry, verified on every protected route
-- Role-based middleware — `protect` checks the token, `authorize` checks the role
-- CORS whitelist — only configured origins can hit the API
+- Passwords hashed with bcrypt (10 salt rounds) and excluded from queries by default
+- JWT with 30-day expiry, verified on every protected route
+- Role-based middleware: `protect` validates the token, `authorize` checks the role
+- CORS restricted to a configured origin whitelist
 - Security headers: `X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`
-- Mongoose schema validation with custom error messages on all inputs
+- Mongoose schema validation on all inputs
 
----
+## Roadmap
 
-## What's Next
-
-Some features we're planning to add:
-
-- Real-time notifications with WebSocket
-- Email and SMS alerts for status changes
-- Heatmap visualization for complaint density across the city
-- Department performance metrics and leaderboards
-- Complaint escalation for overdue issues
-- Multi-language support (Hindi, Marathi, etc.)
-- Progressive Web App support for mobile
-
----
+- [ ] Real-time notifications (WebSocket)
+- [ ] Email and SMS alerts
+- [ ] Complaint density heatmap
+- [ ] Department performance metrics
+- [ ] Escalation of overdue complaints
+- [ ] Multi-language support (Hindi, Marathi)
+- [ ] Progressive Web App
 
 ## Contributing
 
-If you'd like to contribute:
+1. Fork the repository.
+2. Create a branch: `git checkout -b feature/your-feature`
+3. Commit: `git commit -m "feat: your change"`
+4. Push: `git push origin feature/your-feature`
+5. Open a pull request.
 
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m "Add your feature"`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
----
+Keep pull requests focused and describe what changed and why.
 
 ## License
 
-MIT License — use it, modify it, build on it.
+MIT. See [LICENSE](LICENSE).
 
----
+## Author
 
-*Built for Smart India. Because every pothole reported is a step toward a better city.*
+Aditya Marathe. [GitHub](https://github.com/Adi-Marathe), [LinkedIn](https://linkedin.com/in/adityamarathe234)
